@@ -40,7 +40,20 @@ package de.javakaffee.web.msm;
 public class DummyMemcachedBackupSessionManager extends MemcachedBackupSessionManager {
     
     public DummyMemcachedBackupSessionManager() {
-        _msm = new DummyMemcachedSessionService<MemcachedBackupSessionManager>( this );
-    }
-
+        _msm = new DummyMemcachedSessionService<MemcachedBackupSessionManager>( this ) {
+        	@Override
+        	protected RequestTrackingContextValve createRequestTrackingContextValve(final String sessionCookieName) {
+        		final RequestTrackingContextValve result = super.createRequestTrackingContextValve(sessionCookieName);
+        		result.setAsyncSupported(true);
+        		return result;
+        	}
+        	
+        	@Override
+        	protected RequestTrackingHostValve createRequestTrackingHostValve(final String sessionCookieName) {
+        		final RequestTrackingHostValve result = super.createRequestTrackingHostValve(sessionCookieName);
+        		result.setAsyncSupported(true);
+        		return result;
+        	}
+        };        
+    }        
 }
